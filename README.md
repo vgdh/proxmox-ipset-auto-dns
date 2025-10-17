@@ -18,8 +18,19 @@ The script detects IP sets with comments like auto_dns_example.com_github.com, r
 
 ---
 
+## Installation as a systemd service
+Run the installer script (parameter = update interval, e.g. 6h, 30m, 3600s):
+```
+curl -fsSL "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/proxmox-ipset-auto-dns.sh" | sudo bash -s -- 6h
+```
+```
+wget -qO- "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/proxmox-ipset-auto-dns.sh" | sudo bash -s -- 6h
+```
+
 ## 📦 Requirements
 
 Install dependencies:
 ```bash
-apt install jq dnsutils -y
+apt update
+apt install -y jq dnsutils
+```
