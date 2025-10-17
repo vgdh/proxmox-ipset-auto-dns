@@ -44,7 +44,7 @@ check_and_install_requirements() {
 
 check_and_install_requirements || true
 
-# Obtain script: always download from remote (local source support removed)
+
 echo "Downloading script from: $SCRIPT_URL"
 if command -v curl >/dev/null 2>&1; then
   curl -fsSL "$SCRIPT_URL" -o "$INSTALL_PATH"
