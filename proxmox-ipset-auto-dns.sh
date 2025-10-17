@@ -75,12 +75,13 @@ update_ipset() {
     local ipset_name="$2"
     local comment="$3"
 
+    
 
     
     # Extract domains from comment (expects comment like "auto_dns_domain1_domain2")
     if [[ "$comment" =~ ^auto_dns_(.*)$ ]]; then
         local domains="${BASH_REMATCH[1]}"
-
+        echo "IPset: ${ipset_name:-<unnamed>}"
         # display domains comma-separated for readability
         local parsed_display="${domains//_/, }"
         echo "  - Found auto_dns comment. Domains: ${parsed_display:-<none>}"
@@ -187,7 +188,6 @@ print_ipsets() {
     echo "$json" | jq -c 'if type=="array" then .[] else . end' 2>/dev/null | while read -r item; do
         name=$(jq -r '.name // .ipset // .id // empty' <<<"$item")
         comment=$(jq -r '.comment // empty' <<<"$item")
-        echo "  IPset name: ${name:-<unnamed>}"
         
         # print all fields for debugging (only when --debug)
         if [[ "${DEBUG:-0}" -eq 1 ]]; then
