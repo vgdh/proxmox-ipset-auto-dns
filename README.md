@@ -31,9 +31,9 @@ apt install -y jq dnsutils
 ## Installation as a systemd service
 Run the installer script (parameter = update interval, e.g. 6h, 30m, 3600s):
 ```
-curl -fsSL "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/install.sh" | bash -s -- 6h
+curl -fsSL "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/install.sh" | bash -s -- 30m
 ```
 ```
-wget -qO- "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/install.sh" | bash -s -- 6h
+wget -qO- "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/install.sh" | bash -s -- 30m
 ```
 
