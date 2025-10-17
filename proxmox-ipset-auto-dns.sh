@@ -174,6 +174,14 @@ print_ipsets() {
     if [[ -z "$json" || "$json" == "null" ]]; then
         return
     fi
+
+    # determine number of ipset items; arrays -> length, single object -> 1, else 0
+    local count
+    count=$(echo "$json" | jq -r 'if type=="array" then length elif type=="object" then 1 else 0 end' 2>/dev/null || echo 0)
+    if [[ -z "$count" || "$count" -eq 0 ]]; then
+        return
+    fi
+
     echo "Found IP sets at $origin:"
     # If array, iterate; if single object, convert to array
     echo "$json" | jq -c 'if type=="array" then .[] else . end' 2>/dev/null | while read -r item; do
