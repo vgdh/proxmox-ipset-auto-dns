@@ -4,7 +4,7 @@
 # Author: vgdh
 # Requires: pvesh, jq, dig (dnsutils)
 set -euo pipefail
-
+shopt -s extglob
 
 # detect --debug flag (only affect printing of executed pvesh commands)
 DEBUG=0
@@ -146,18 +146,43 @@ update_ipset() {
                 fi
             fi
 
-            # Clear existing IPs
-            echo "  - Clearing existing IPs"
-            for cidr in $cidr_list; do
-                safe_delete "$pvesh_path/$ipset_name/$cidr"
+            # Decide which existing IPs to remove (those NOT in all_ips)
+            echo "  - Reconciling existing IPs"
+            declare -A existing_ips=()
+            if [[ -n "$cidr_list" ]]; then
+                while IFS= read -r c; do
+                    c="${c##+([[:space:]])}"
+                    c="${c%%+([[:space:]])}"
+                    if [[ -n "$c" ]]; then
+                        existing_ips["$c"]=1
+                    fi
+                done <<<"$cidr_list"
+            fi
+
+            # build lookup for all_ips
+            declare -A wanted=()
+            for ip in "${all_ips[@]}"; do
+                wanted["$ip"]=1
             done
 
-            # Add new IPs with per-domain comment (domain name)
-            echo "  - Adding new IPs:"
+            # Remove IPs that exist but are no longer desired
+            for e in "${!existing_ips[@]}"; do
+                if [[ -z "${wanted[$e]+x}" ]]; then
+                    echo "      Removing outdated IP: $e"
+                    safe_delete "$pvesh_path/$ipset_name/$e"
+                fi
+            done
+
+            # Add new IPs that are wanted but not already present; preserve per-domain comment
+            echo "  - Applying additions:"
             for ip in "${all_ips[@]}"; do
-                local dom="${ip2domain[$ip]}"
-                echo "      Adding IP: $ip (domain: $dom)"
-                safe_create "$pvesh_path/$ipset_name" --cidr "$ip" --comment "$dom"
+                if [[ -z "${existing_ips[$ip]+x}" ]]; then
+                    local dom="${ip2domain[$ip]}"
+                    echo "      Adding IP: $ip (domain: $dom)"
+                    safe_create "$pvesh_path/$ipset_name" --cidr "$ip" --comment "$dom"
+                else
+                    echo "      Skipping existing IP: $ip"
+                fi
             done
             echo
         else
