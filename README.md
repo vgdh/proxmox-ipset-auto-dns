@@ -18,6 +18,12 @@ The script detects IP sets with comments like auto_dns_example.com_github.com, r
 
 ---
 
+## ⚙️ How to use
+
+1. Create an IPset (for Cluster, VM, or LXC) with any name, and set its comment to: `auto_dns_domain-1.com_example.com_google.com`
+2. Wait for the script to automatically populate the IP addresses in the list, or run it manually: `/usr/local/bin/proxmox-ipset-auto-dns.sh`
+---
+
 ## 📦 Requirements
 
 Install dependencies:
@@ -28,7 +34,7 @@ apt install -y jq dnsutils
 
 ---
 
-## Installation as a systemd service
+## 🛠️ Installation as a systemd service
 Run the installer script (parameter = update interval, e.g. 6h, 30m, 3600s):
 ```
 curl -fsSL "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/install.sh" | bash -s -- 30m
@@ -36,4 +42,3 @@ curl -fsSL "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/h
 ```
 wget -qO- "https://raw.githubusercontent.com/vgdh/proxmox-ipset-auto-dns/refs/heads/main/install.sh" | bash -s -- 30m
 ```
-
