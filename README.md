@@ -1,5 +1,5 @@
 # proxmox-ipset-auto-dns
-Automatically update [Proxmox VE](https://www.proxmox.com/en/proxmox-ve) firewall IP sets (ipset) based on domain names in comments.
+Automatically update [Proxmox VE](https://www.proxmox.com/en/proxmox-ve) firewall IP sets based on domain names in comments.
 
 The script detects IP sets with comments like auto_dns_example.com_github.com, resolves their IPs via DNS, and updates the firewall accordingly — cluster-wide, node, VM, and container levels supported.
 
